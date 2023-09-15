@@ -2,7 +2,7 @@
 export default function Home() {
     return(
         <>
-      <div
+      <div className = "usa-section"
         style={{
           height: "550px",
           width: "100%",
@@ -10,8 +10,8 @@ export default function Home() {
           position: "relative",
         }}
       >            
-      <h1>Hi</h1>
-    </div>
+      <h1>Welcome to your new favorite website.</h1>
+      </div>
     </>
     )
 }

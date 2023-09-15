@@ -1,0 +1,20 @@
+.usa-table td{
+    background-color: #ecf3ec !important;
+}
+.usa-table th{
+    background-color: #b4d0b9 !important;
+}
+.usa-legend--large {
+    white-space: nowrap;
+}
+.usa-card__container {
+    border-color: #000 !important;
+    border-width: 1px !important;
+    border-radius: 0rem !important;
+}
+.usa-table {
+    margin: 0 !important;
+}
+.usa-form {
+    max-width: 25rem !important;
+}

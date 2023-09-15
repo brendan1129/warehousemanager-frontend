@@ -1,0 +1,3 @@
+.usa-nav__link:hover::after {
+    background-color: #4d8055 !important;
+}
