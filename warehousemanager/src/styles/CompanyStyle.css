@@ -12,6 +12,9 @@
     border-width: 1px !important;
     border-radius: 0rem !important;
 }
+.usa-card-group {
+    display: contents !important;
+}
 .usa-table {
     margin: 0 !important;
 }

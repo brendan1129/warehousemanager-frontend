@@ -1,7 +1,9 @@
 
 export default function Home() {
-    return(
-        <>
+
+
+  return(
+    <>
       <div className = "usa-section"
         style={{
           height: "550px",
@@ -10,7 +12,7 @@ export default function Home() {
           position: "relative",
         }}
       >            
-      <h1>Welcome to your new favorite website.</h1>
+        <h1>Welcome to your new favorite website.</h1>
       </div>
     </>
     )
