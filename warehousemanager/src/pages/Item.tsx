@@ -37,7 +37,7 @@ export default function Item(props: {companyData: Company[]}) {
           setWarehouses(false);
         }
       }
-    }, [selectedCompany])
+    }, [selectedCompany, warehouseData])
     {/** Tracking that the currently selected warehouse has items associated with it.
     Changes each time a different warehouse is selected. */}
     useEffect(() => {
@@ -63,8 +63,8 @@ export default function Item(props: {companyData: Company[]}) {
     }
     let itemArray = []
 
-    if(itemData) {
-      itemArray.push(<tbody key = {"Body"}>{itemData!.map((item) => (
+
+      itemArray.push(<tbody key = {"Body"}>{itemData?.map((item) => (
         <React.Fragment key = {item.item_id.toString()}>
         <tr>
             <td className ="usa-table td" >{String(item.itemName)}</td>
@@ -89,7 +89,6 @@ export default function Item(props: {companyData: Company[]}) {
         </thead>
       </React.Fragment>
       )
-    }
     {/** Tracking that the company list is greater than 0 in length.
       If not, the appropriate message will be rendered to DOM.  */}
     useEffect(() => {
@@ -147,12 +146,8 @@ export default function Item(props: {companyData: Company[]}) {
             : <>  No Companies Available </> }
             </Grid>
             <Grid col={6}>
-              {items ? <>
-                <h2 style={{textAlign:"center", margin: "0rem", marginBottom: ".67rem"}}> {selectedWarehouse} Items </h2>
+                <h2 style={{textAlign:"center", margin: "0rem", marginBottom: ".67rem"}}> {(selectedWarehouse == 'default')?<></>: <>{selectedWarehouse}</>} Items </h2>
                 <Table bordered={true} fullWidth>{itemArray} </Table>
-              </> : <>
-
-              </>}
             </Grid>
           </Grid>
         </GridContainer>
