@@ -18,6 +18,7 @@ export default function Warehouse(props: {companyData: Company[]}) {
   const [ editID, setEditID] = useState("");
   const [ editName, setEditName] = useState("");
   const [ editCapacity, setEditCapacity] = useState("");
+  const [ warehousesPresent, setWarehousesPresent] = useState(false);
   const [AddWarehouseMutation] = useAddWarehouseMutation();
   const [EditWarehouseMutation] = useUpdateWarehouseMutation();
   const [DeleteWarehouseMutation] = useDeleteWarehouseMutation();
@@ -33,7 +34,8 @@ export default function Warehouse(props: {companyData: Company[]}) {
       const newWarehouse = {
         warehouseName: data.get("warehouse-name")!.toString(),
         company_id: selectedCompanyID,
-        maxCapacity: Number(data.get('warehouse-capacity'))
+        maxCapacity: Number(data.get('warehouse-capacity')),
+        revenue: 0
       }
       try {
         await AddWarehouseMutation(newWarehouse)
@@ -54,7 +56,8 @@ export default function Warehouse(props: {companyData: Company[]}) {
         warehouse_id: editID,
         warehouseName: String(data.get('edit-name')),
         maxCapacity: Number(data.get('edit-capacity')),
-        company_id: selectedCompanyID
+        revenue: 0,
+        company_id: selectedCompanyID,
       }
       try {
         await EditWarehouseMutation({warehouseId: Number(editID), updatedWarehouse: newWarehouse})
@@ -65,7 +68,7 @@ export default function Warehouse(props: {companyData: Company[]}) {
     }
     editToggle(0, "", 0);
   }
-  let name = '';
+
   const handleSelectChange = (e: any) => {    
     setSelected(e.target.value);
     setCompanyName(e.target.value);
@@ -74,7 +77,7 @@ export default function Warehouse(props: {companyData: Company[]}) {
     }
   };
 
-  const {data, isError} = useGetCompanyByNameQuery(selected);
+  const {data} = useGetCompanyByNameQuery(selected);
 
   useEffect(() => {
     console.log("The name is: " + selected);
@@ -114,17 +117,18 @@ export default function Warehouse(props: {companyData: Company[]}) {
   }
   if(isSuccess) {
     warehouseArray.push(<tbody key = {"Body"}>{warehouses!.map((warehouse) => (
-      <React.Fragment key = {warehouse.warehouse_id.toString()}>
-      <tr>
-          <td className ="usa-table td" >{warehouse.warehouseName}</td>
-          <td className ="usa-table td">{String(warehouse.maxCapacity)}</td>
-          <td className ="usa-table td" style={{textAlign:"center"}}><Button unstyled type="button" onClick={() => editToggle(warehouse.warehouse_id, warehouse.warehouseName, warehouse.maxCapacity)} style={{color:"#000"}}><FontAwesomeIcon icon={faPenToSquare} style={{color: "#000000"}} /></Button></td>
-          <td className ="use-table td" style={{textAlign:"center", paddingBottom: 0}}><Button unstyled type="button" onClick={() => {handleDelete(Number(warehouse.warehouse_id))}} style={{color:"#000"}}><Icon.Delete size={3}></Icon.Delete></Button></td>
-      </tr>
-      </React.Fragment>
-      ))
-    }
-    </tbody>
+        <React.Fragment key = {warehouse.warehouse_id.toString()}>
+          <tr>
+              <td className ="usa-table td" >{warehouse.warehouseName}</td>
+              <td className ="usa-table td">{String(warehouse.maxCapacity)}</td>
+              <td className ="usa-table td">${String(warehouse.revenue)}</td> {/** Total Revenue goes here */}
+              <td className ="usa-table td" style={{textAlign:"center"}}><Button unstyled type="button" onClick={() => editToggle(warehouse.warehouse_id, warehouse.warehouseName, warehouse.maxCapacity)} style={{color:"#000"}}><FontAwesomeIcon icon={faPenToSquare} style={{color: "#000000"}} /></Button></td>
+              <td className ="use-table td" style={{textAlign:"center", paddingBottom: 0}}><Button unstyled type="button" onClick={() => {handleDelete(Number(warehouse.warehouse_id))}} style={{color:"#000"}}><Icon.Delete size={3}></Icon.Delete></Button></td>
+          </tr>
+        </React.Fragment>
+        ))
+      }
+      </tbody>
     )
     warehouseArray.unshift(
     <React.Fragment key={"Header"}>
@@ -132,6 +136,7 @@ export default function Warehouse(props: {companyData: Company[]}) {
           <tr key="tableHeader" className="usa-table th">
               <th>Name</th>
               <th>Max Capacity</th>
+              <th>Revenue</th>
               <th style={{textAlign:"center"}}>Edit</th>
               <th style={{textAlign:"center"}}>Delete</th>
           </tr>
@@ -148,7 +153,7 @@ export default function Warehouse(props: {companyData: Company[]}) {
       console.log("Something wrong with delete")
      }
   }
-
+  
   /* Set up Selection of Companies for Add */
 
     return(
@@ -162,18 +167,20 @@ export default function Warehouse(props: {companyData: Company[]}) {
       }}>  
         <GridContainer>
           <Grid row gap={6}>
-            <Grid col={6}>
+            <Grid tablet={{ col: true }} desktop={{col: 6}} mobile={{col: true}}>
             { entries ? 
               <>
               <h2 style={{textAlign:"center", margin: "0rem"}}> Select a company: </h2>
-                <Select id="company-dropdown" name="company-dropdown" onChange={e => (handleSelectChange(e))} value={selected}>
-                  <option value = "default">[ Select ]</option>
-                  {props.companyData.map((item, index) => (
-                    <React.Fragment key={index}>
-                    <option value = {item.companyName}>{item.companyName}</option>
-                    </React.Fragment>
-                  ))}
-                </Select>
+                <div style={{textAlign:"center"}}>
+                  <Select style={{maxWidth: "50rem"}}id="company-dropdown" name="company-dropdown" onChange={e => (handleSelectChange(e))} value={selected}>
+                    <option value = "default">[ Select ]</option>
+                    {props.companyData.map((item, index) => (
+                      <React.Fragment key={index}>
+                      <option value = {item.companyName}>{item.companyName}</option>
+                      </React.Fragment>
+                    ))}
+                  </Select>
+                </div>
                 <br/>
                   { adding && editing ? <> <Button type="button" onClick={addToggle} style = {{backgroundColor: "#4d8055"}}>Add Warehouse</Button>  </> : <></> }
                   { adding ? <></> : 
@@ -215,9 +222,11 @@ export default function Warehouse(props: {companyData: Company[]}) {
             </>
             }
             </Grid>
-            <Grid col={6}>
-            <h2 style={{textAlign:"center", marginTop: "0rem", marginBottom: ".5rem"}}> {companyName} Warehouses </h2>
+            <Grid tablet={{ col: true }} desktop={{col: 6}} mobile={{col: true}}>
+              { entries ? <>
+              <h2 style={{textAlign:"center", marginTop: "0rem", marginBottom: ".5rem"}}> {companyName} Warehouses </h2>
               <Table bordered={true} fullWidth>{warehouseArray} </Table>
+              </> : <></> }
             </Grid>
           </Grid>
         </GridContainer>

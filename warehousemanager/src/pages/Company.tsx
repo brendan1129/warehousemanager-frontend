@@ -90,7 +90,7 @@ export default function Company(props : { companyData: CompanyData[]}) {
         }}> 
             <GridContainer>
                 <Grid row gap={6}>
-                    <Grid col={6}>
+                    <Grid tablet={{ col: true }} desktop={{col: 6}}  mobile={{col: true}}>
                         { adding ?
                         <>
                         <h2 style={{textAlign:"center", margin: "0rem", marginBottom: ".67rem"}}>Here are your current companies:</h2>
@@ -117,7 +117,7 @@ export default function Company(props : { companyData: CompanyData[]}) {
                         </CardGroup>
                         }
                     </Grid>
-                    <Grid col={6}>
+                    <Grid tablet={{ col: true }} desktop={{col: 6}} mobile={{col: true}}>
                         <Table bordered={true} fullWidth>{tableRows} </Table>
                     </Grid>
                 </Grid>

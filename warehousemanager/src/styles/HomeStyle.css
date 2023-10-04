@@ -1,0 +1,11 @@
+.usa-accordion--bordered .usa-accordion__content {
+    border-bottom: .25rem solid  #ecf3ec !important;
+    border-left: .25rem solid  #ecf3ec !important;
+    border-right: .25rem solid  #ecf3ec !important;
+}
+.usa-accordion__button {
+    background-color:  #ecf3ec !important;
+}
+.usa-card__img {
+    background-color: #fff !important;
+}
